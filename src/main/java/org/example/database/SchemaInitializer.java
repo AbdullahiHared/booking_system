@@ -47,5 +47,20 @@ public class SchemaInitializer {
                         "date DATE NOT NULL, " +
                         "total_profit DECIMAL(10, 2));"
         };
+
+
+        try (Statement statement = connection.createStatement()) {
+            for (String sql : schemaSQL) {
+                statement.executeUpdate(sql);
+                System.out.println("Executed: " + sql);
+            }
+            System.out.println("Database schema initialized successfully!");
+        } catch (Exception e) {
+            System.err.println("Error initializing schema: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
+
 }
+
+
