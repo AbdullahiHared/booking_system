@@ -28,5 +28,12 @@ public class ProfitManager {
         profitLogs.add("Added profit: " + ticketPrice + " | Total Profit: " + totalProfit);
     }
 
+    // method to update totalProfit when refund is made
+    public void deductProfit(boolean isAdult) {
+        double ticketPrice = isAdult ? adultTicketPrice : childTicketPrice;
+        totalProfit-= ticketPrice;
+        profitLogs.add("Refunded amount: " + ticketPrice + ", Total profit: " + getTotalProfit());
+    }
+
 
 }
