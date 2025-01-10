@@ -35,5 +35,9 @@ public class ProfitManager {
         profitLogs.add("Refunded amount: " + ticketPrice + ", Total profit: " + getTotalProfit());
     }
 
+    public List<String> getProfitLogs () {
+        return profitLogs;
+    }
+
 
 }
