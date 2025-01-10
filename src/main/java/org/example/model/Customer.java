@@ -6,5 +6,10 @@ public class Customer {
     private String lastName;
     private int birthDate;
 
-
+    public Customer(int customerId, String firstName, String lastName, int birthDate) {
+        this.customerId = customerId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthDate = birthDate;
+    }
 }
