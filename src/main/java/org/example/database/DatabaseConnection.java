@@ -22,4 +22,12 @@ public class DatabaseConnection {
 
     }
 
+    public static void main(String[] args) {
+        try (Connection connection = getConnection()) {
+            System.out.println("Connected to mysql database successfully");
+        } catch (SQLException e) {
+            System.out.println("SQLException: " + e.getMessage());
+        }
+    }
+
 }
