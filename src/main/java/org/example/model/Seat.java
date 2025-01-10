@@ -47,5 +47,19 @@ public class Seat {
         }
     }
 
+    // Method to cancel reservation
+    public void cancelReservation() {
+        if (isReserved) {
+            isReserved = false;
+            passengerName = null;
+            passengerBirthDate = null;
+            bookingDate = null;
+            price = 0;
+            System.out.println("Reservation canceled successfully.");
+        } else {
+            System.out.println("Seat is not reserved");
+        }
+     }
+
 
 }
