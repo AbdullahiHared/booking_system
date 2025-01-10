@@ -61,5 +61,32 @@ public class Seat {
         }
      }
 
+    // Getters and setters
+    public int getSeatNumber() {
+        return seatNumber;
+    }
 
+    public boolean isReserved() {
+        return isReserved;
+    }
+
+    public String getPassengerName() {
+        return passengerName;
+    }
+
+    public LocalDate getPassengerBirthDate() {
+        return passengerBirthDate;
+    }
+
+    public LocalDate getBookingDate() {
+        return bookingDate;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
 }
