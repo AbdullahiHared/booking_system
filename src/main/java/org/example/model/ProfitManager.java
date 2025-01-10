@@ -16,4 +16,17 @@ public class ProfitManager {
         this.profitLogs = new ArrayList<>();
     }
 
+    // getter for the total profit
+    public double getTotalProfit() {
+        return totalProfit;
+    }
+
+    // Method to add profit for a booking
+    public void addProfit(boolean isAdult) {
+        double ticketPrice = isAdult ? adultTicketPrice : childTicketPrice;
+        totalProfit += ticketPrice;
+        profitLogs.add("Added profit: " + ticketPrice + " | Total Profit: " + totalProfit);
+    }
+
+
 }
