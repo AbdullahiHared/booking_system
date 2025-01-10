@@ -10,4 +10,17 @@ public class Seat {
     private LocalDate bookingDate;
     private double price;
 
+    // Constructor
+
+    // Constructor
+    public Seat(int seatNumber, double price) {
+        this.seatNumber = seatNumber;
+        this.isReserved = false;
+        this.passengerName = null;
+        this.passengerBirthDate = null;
+        this.bookingDate = null;
+        this.price = price;
+    }
+
+
 }
