@@ -2,10 +2,7 @@ package org.example.dao;
 
 import org.example.model.Customer;
 
-import java.sql.Connection;
-import java.sql.Statement;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 
 public class CustomerDAO {
     private Connection connection;
@@ -14,7 +11,25 @@ public class CustomerDAO {
         this.connection = connection;
     }
 
-    //
+    // Add a new customer
+    public void insertCustomer(Customer customer) {
+        String query = "INSERT INTO customers(customer_id, customer_name, birth_date) VALUES (?, ?, ?)";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            preparedStatement.setInt(1, customer.getId());
+            preparedStatement.setString(2, customer.getName());
+            preparedStatement.setDate(3, customer.getBirthDate());
+            preparedStatement.executeUpdate();
+
+            // Retrieve the auto-generated ID
+            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    customer.setId(generatedKeys.getInt(1));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
 
 
