@@ -31,6 +31,7 @@ public class CustomerDAO {
         }
     }
 
+    // update customer
     public void updateCustomer(Customer customer) {
         String query = "UPDATE customers SET customer_name = ?, birth_date = ? WHERE customer_id = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -40,6 +41,19 @@ public class CustomerDAO {
             preparedStatement.executeUpdate();
     } catch (SQLException e) {
             System.out.println("Error updating: " + e.getMessage());
+        }
+    }
+
+    // get customer by id
+    public void getCustomerById(int id) {
+        String query = "DELETE FROM customers WHERE id = ?";
+        try (PreparedStatement psmt = connection.prepareStatement(query)) {
+            psmt.setInt(1, id);
+            psmt.executeUpdate();
+        } catch (SQLException e) {
+            // log errors
+            System.out.println("Could not find custome with the given id.");
+            System.out.println(e.getMessage());
         }
     }
 
