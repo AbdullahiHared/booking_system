@@ -109,4 +109,15 @@ public class BookingDAO {
             System.err.println("Error updating booking: " +e.getMessage());
         }
     }
+
+    // Delete a booking
+    public void deleteBookingById(int booking_id) {
+        String query = "DELETE FROM booking WHERE id = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setInt(1, booking_id);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Error deleting booking: " + e.getMessage());
+        }
+    }
 }
