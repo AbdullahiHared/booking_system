@@ -31,6 +31,16 @@ public class CustomerDAO {
         }
     }
 
-
+    public void updateCustomer(Customer customer) {
+        String query = "UPDATE customers SET customer_name = ?, birth_date = ? WHERE customer_id = ?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, customer.getId());
+            preparedStatement.setString(2, customer.getName());
+            preparedStatement.setDate(3, customer.getBirthDate());
+            preparedStatement.executeUpdate();
+    } catch (SQLException e) {
+            System.out.println("Error updating: " + e.getMessage());
+        }
+    }
 
 }
