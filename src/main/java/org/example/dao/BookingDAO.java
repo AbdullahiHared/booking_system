@@ -1,6 +1,8 @@
 package org.example.dao;
 
 import org.example.model.Booking;
+
+import javax.xml.transform.Result;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,5 +66,31 @@ public class BookingDAO {
 
         return bookings;
 
+    }
+
+    // Get booking by ID
+    public Booking getBookingById(int id ) throws SQLException {
+        String query = "SELECT * FROM bookings WHERE id = ?";
+        try (PreparedStatement psmt = connection.prepareStatement(query)) {
+            psmt.setInt(1, id);
+            ResultSet rs = psmt.executeQuery();
+            if(rs.next()) {
+                Booking booking = new Booking();
+                booking.setId(rs.getInt("booking_id"));
+                booking.setPassengerId(rs.getInt("passenger_id"));
+                booking.setPassengerName(rs.getString("passenger_name"));
+                booking.setBookingDate(rs.getDate("booking_date"));
+                booking.setBookingTime((rs.getTime("booking_time")).toString());
+
+                // return booking if found
+                return booking;
+            }
+        } catch (SQLException e) {
+            // log errors
+            System.out.println(e.getMessage());
+            System.out.println(e.getErrorCode());
+        }
+        // return null if now booking is found
+        return null;
     }
 }
