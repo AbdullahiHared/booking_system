@@ -82,4 +82,15 @@ public class CustomerDAO {
         }
         return customers;
     }
+
+    // delete customers
+    public void deleteCustomerById(int id) {
+        String query = "DELETE FROM customers WHERE id = ?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
