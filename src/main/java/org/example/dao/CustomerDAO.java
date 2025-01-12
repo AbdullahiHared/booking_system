@@ -3,6 +3,8 @@ package org.example.dao;
 import org.example.model.Customer;
 
 import java.sql.*;
+import java.util.List;
+import java.util.ArrayList;
 
 public class CustomerDAO {
     private Connection connection;
@@ -57,4 +59,27 @@ public class CustomerDAO {
         }
     }
 
+    // get all customers
+    public List<Customer> getAllCustomers() {
+        List<Customer> customers = new ArrayList<>();
+        String query = "SELECT * FROM customers";
+        try (PreparedStatement psmt = connection.prepareStatement(query)) {
+            ResultSet rs = psmt.executeQuery();
+
+            while(rs.next()) {
+                Customer customer = new Customer();
+                customer.setId(rs.getInt("customer_id"));
+                customer.setLastName(rs.getString("customer_id"));
+                customer.setBirthDate(rs.getDate("birth_date").toLocalDate());
+
+                customers.add(customer);
+            }
+
+        } catch (SQLException e) {
+            // log errors
+            System.out.println(e.getMessage());
+            System.out.println(e.getMessage());
+        }
+        return customers;
+    }
 }
