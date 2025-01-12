@@ -8,4 +8,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class CustomerDAO {
+    private Connection connection;
+
+    public CustomerDAO(Connection connection) {
+        this.connection = connection;
+    }
+
+    //
+
+
+
 }
