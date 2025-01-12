@@ -93,4 +93,20 @@ public class BookingDAO {
         // return null if now booking is found
         return null;
     }
+
+    // Update a booking
+    public void updateBooking(Booking booking) {
+        String query = "UPDATE bookings SET booking_id = ?, passenger_id = ?, passenger_name = ?, booking_date = ?, booking_time = ? WHERE id = ? ";
+        try (PreparedStatement psmt = connection.prepareStatement(query)) {
+            psmt.setInt(1, booking.getId());
+            psmt.setInt(2, booking.getPassengerId());
+            psmt.setString(3, booking.getPassengerName());
+            psmt.setDate(4, booking.getBookingDate());
+            psmt.setTime(5, booking.getBookingTime());
+            psmt.executeUpdate();
+            System.out.println("Successfully updated booking.");
+        } catch (SQLException e) {
+            System.err.println("Error updating booking: " +e.getMessage());
+        }
+    }
 }
