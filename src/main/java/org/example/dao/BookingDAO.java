@@ -2,7 +2,6 @@ package org.example.dao;
 
 import org.example.model.Booking;
 
-import javax.xml.transform.Result;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,114 +9,96 @@ import java.util.List;
 public class BookingDAO {
     private final Connection connection;
 
-
     public BookingDAO(Connection connection) {
         this.connection = connection;
     }
 
     // Add a new booking
     public void addBooking(Booking booking) throws SQLException {
-        String sql = "INSERT INTO bookings (passenger_id, passenger_name, booking_date, booking_time) VALUES (?,?, ?, ?)";
+        String sql = "INSERT INTO Bookings (customer_id, passenger_seat) VALUES (?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            ps.setInt(1, booking.getPassengerId());
-            ps.setString(2, booking.getPassengerName());
-            ps.setDate(3, booking.getBookingDate());
-            ps.setTime(4, booking.getBookingTime());
+            ResultSet rs = ps.executeQuery();
+            ps.setInt(1, booking.getCustomerId(rs.getInt("customer_id")));
+            ps.setInt(2, booking.getSeat());
 
             int affectedRows = ps.executeUpdate();
             if (affectedRows > 0) {
                 try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
-                        booking.setId(generatedKeys.getInt(1)); // Set the generated ID
+                        booking.setId(generatedKeys.getInt(1)); // Set the generated booking_id
                     }
-                } catch (SQLException e) {
-                    // print errors
-                    System.out.println(e.getErrorCode());
-                    System.out.println(e.getMessage());
                 }
             }
         } catch (SQLException e) {
-            // print errors
-            System.out.println(e.getErrorCode());
-            System.out.println(e.getMessage());
+            System.err.println("Error adding booking: " + e.getMessage());
+            throw e;
         }
     }
 
     // Get all bookings
     public List<Booking> getAllBookings() throws SQLException {
         List<Booking> bookings = new ArrayList<>();
-        String query = "SELECT * FROM bookings";
+        String query = "SELECT * FROM Bookings";
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
-            while(rs.next()) {
+            while (rs.next()) {
                 Booking booking = new Booking();
-                booking.setId(rs.getInt("Booking_id"));
-                booking.setPassengerId(rs.getInt("passenger_id"));
-                booking.setPassengerName(rs.getString("passenger_name"));
-                booking.setBookingDate(rs.getDate("booking_date"));
-                booking.setBookingTime((rs.getTime("booking_time")).toString());
-
+                booking.setId(rs.getInt("booking_id"));
+                booking.getCustomerId(rs.getInt("customer_id"));
+                booking.setSeatNumber(rs.getInt("passenger_seat"));
                 bookings.add(booking);
             }
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             System.err.println("Error fetching bookings: " + e.getMessage());
         }
-
         return bookings;
-
     }
 
     // Get booking by ID
-    public Booking getBookingById(int id ) throws SQLException {
-        String query = "SELECT * FROM bookings WHERE id = ?";
-        try (PreparedStatement psmt = connection.prepareStatement(query)) {
-            psmt.setInt(1, id);
-            ResultSet rs = psmt.executeQuery();
-            if(rs.next()) {
-                Booking booking = new Booking();
-                booking.setId(rs.getInt("booking_id"));
-                booking.setPassengerId(rs.getInt("passenger_id"));
-                booking.setPassengerName(rs.getString("passenger_name"));
-                booking.setBookingDate(rs.getDate("booking_date"));
-                booking.setBookingTime((rs.getTime("booking_time")).toString());
-
-                // return booking if found
-                return booking;
+    public Booking getBookingById(int id) throws SQLException {
+        String query = "SELECT * FROM Bookings WHERE booking_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Booking booking = new Booking();
+                    booking.setId(rs.getInt("booking_id"));
+                    booking.getCustomerId(rs.getInt("customer_id"));
+                    booking.getSeat();
+                    return booking;
+                }
             }
         } catch (SQLException e) {
-            // log errors
-            System.out.println(e.getMessage());
-            System.out.println(e.getErrorCode());
+            System.err.println("Error fetching booking by ID: " + e.getMessage());
         }
-        // return null if now booking is found
-        return null;
+        return null; // Return null if no booking is found
     }
 
     // Update a booking
-    public void updateBooking(Booking booking) {
-        String query = "UPDATE bookings SET booking_id = ?, passenger_id = ?, passenger_name = ?, booking_date = ?, booking_time = ? WHERE id = ? ";
-        try (PreparedStatement psmt = connection.prepareStatement(query)) {
-            psmt.setInt(1, booking.getId());
-            psmt.setInt(2, booking.getPassengerId());
-            psmt.setString(3, booking.getPassengerName());
-            psmt.setDate(4, booking.getBookingDate());
-            psmt.setTime(5, booking.getBookingTime());
-            psmt.executeUpdate();
+    public void updateBooking(Booking booking) throws SQLException {
+        String query = "UPDATE Bookings SET customer_id = ?, passenger_seat = ? WHERE booking_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ResultSet rs = ps.executeQuery();
+            ps.setInt(1, booking.getCustomerId(rs.getInt("customer_id")));
+            ps.setInt(2, booking.getSeat());
+            ps.setInt(3, booking.getId());
+            ps.executeUpdate();
             System.out.println("Successfully updated booking.");
         } catch (SQLException e) {
-            System.err.println("Error updating booking: " +e.getMessage());
+            System.err.println("Error updating booking: " + e.getMessage());
+            throw e;
         }
     }
 
     // Delete a booking
-    public void deleteBookingById(int booking_id) {
-        String query = "DELETE FROM booking WHERE id = ?";
-        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setInt(1, booking_id);
-            pstmt.executeUpdate();
+    public void deleteBookingById(int bookingId) throws SQLException {
+        String query = "DELETE FROM Bookings WHERE booking_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, bookingId);
+            ps.executeUpdate();
         } catch (SQLException e) {
             System.err.println("Error deleting booking: " + e.getMessage());
+            throw e;
         }
     }
 }
