@@ -1,4 +1,6 @@
 package org.example.model;
+import org.example.database.SchemaInitializer;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +40,5 @@ public class ProfitManager {
     public List<String> getProfitLogs () {
         return profitLogs;
     }
-
 
 }

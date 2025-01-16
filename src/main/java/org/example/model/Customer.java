@@ -1,52 +1,52 @@
 package org.example.model;
 
+import java.sql.Date;
 import java.time.LocalDate;
 
 public class Customer {
     private int customerId;
     private String firstName;
     private String lastName;
-    private LocalDate birthDate;
-    public Customer(int customerId, String firstName, String lastName, LocalDate birthDate) {
+    private Date birthDate;
+    private String name;
+    private int customerSeat;
+    public Customer(int customerId, String firstName, String lastName, LocalDate birthDate, int customerSeat) {
         this.customerId = customerId;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.birthDate = birthDate;
+        this.birthDate = Date.valueOf(birthDate);
     }
 
     // Getter and Setter for customerId
-    public int getCustomerId() {
+    public int getId() {
         return customerId;
     }
 
-    public void setCustomerId(int customerId) {
+    public int getCustomerSeat() {
+        return this.customerSeat;
+    }
+
+    public void setId(int customerId) {
         this.customerId = customerId;
     }
 
     // Getter and Setter for firstName
-    public String getFirstName() {
-        return firstName;
+
+    public String getName () {
+        name = firstName + " " + this.lastName;
+        return this.name;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    // Getter and Setter for lastName
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setName(String newName) {
+        this.name = newName;
     }
 
     // Getter and Setter for birthDate
-    public LocalDate getBirthDate() {
+    public Date getBirthDate() {
         return birthDate;
     }
 
     public void setBirthDate(LocalDate birthDate) {
-        this.birthDate = birthDate;
+        this.birthDate = Date.valueOf(birthDate);
     }
 }
