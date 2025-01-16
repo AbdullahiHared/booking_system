@@ -21,13 +21,19 @@ public class CustomerDaoTest {
             Customer customer = new Customer();
             String name = "TesName";
             LocalDate birthDate = LocalDate.of(1904, 3, 11);
-            customer.setName(name);
-            customer.setBirthDate(birthDate);
-            System.out.println("Inserting customer: " + customer.getName() + " " + customer.getBirthDate());
-            customerDao.insertCustomer(customer);
-            System.out.println("Customer was added");
-            // get All customers
-            customerDao.getAllCustomers();
+
+            // Test: delete customer by id
+            customerDao.deleteCustomerById(1);
+            customerDao.deleteCustomerById(2);
+            customerDao.deleteCustomerById(3);
+            customerDao.deleteCustomerById(4);
+            customerDao.deleteCustomerById(5);
+            customerDao.deleteCustomerById(6);
+            customerDao.deleteCustomerById(7);
+            customerDao.deleteCustomerById(8);
+            customerDao.deleteCustomerById(9);
+            customerDao.deleteCustomerById(10);
+
         } catch (SQLException e) {
             System.out.println("Could not add customer into db");
             System.out.println(e.getMessage());
