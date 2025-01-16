@@ -22,10 +22,14 @@ public class DatabaseConnection {
 
     }
 
-    public static void main(String[] args) {
-        try (Connection connection = getConnection()) {
+    public static void main(String[] args) throws SQLException {
+        Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+        SchemaInitializer.initializeSchema(connection);
+        try (connection) {
+            System.out.println("Initialized schema successfully");
             System.out.println("Connected to mysql database successfully");
         } catch (SQLException e) {
+            System.out.println("Could not initialize schema");
             System.out.println("SQLException: " + e.getMessage());
         }
     }
