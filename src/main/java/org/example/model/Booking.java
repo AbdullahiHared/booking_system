@@ -19,15 +19,15 @@ public class Booking {
         return id;
     }
 
+    public int getSeat() {
+        return customer.getCustomerSeat();
+    }
+
     public void setId(int id) {
         this.id = id;
     }
 
     public Customer getCustomer() {
         return customer;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
     }
 }
