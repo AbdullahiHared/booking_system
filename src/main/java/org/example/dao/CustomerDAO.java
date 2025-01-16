@@ -69,7 +69,7 @@ public class CustomerDAO {
             while(rs.next()) {
                 Customer customer = new Customer();
                 customer.setId(rs.getInt("customer_id"));
-                customer.setLastName(rs.getString("customer_id"));
+                customer.setName(rs.getString("customer_name"));
                 customer.setBirthDate(rs.getDate("birth_date").toLocalDate());
 
                 customers.add(customer);
@@ -84,13 +84,19 @@ public class CustomerDAO {
     }
 
     // delete customers
-    public void deleteCustomerById(int id) {
-        String query = "DELETE FROM customers WHERE id = ?";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setInt(1, id);
-            preparedStatement.executeUpdate();
+    public void deleteCustomerById(int customerId) {
+        String sql = "DELETE FROM Customers WHERE customer_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, customerId);
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Customer with ID " + customerId + " was deleted.");
+            } else {
+                System.out.println("No customer found with ID " + customerId);
+            }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println("Error deleting customer: " + e.getMessage());
         }
     }
+
 }
