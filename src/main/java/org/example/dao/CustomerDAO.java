@@ -48,16 +48,25 @@ public class CustomerDAO {
 
     // get customer by id
     public void getCustomerById(int id) {
-        String query = "DELETE FROM customers WHERE id = ?";
+        String query = "SELECT * FROM customers WHERE customer_id = ?";
         try (PreparedStatement psmt = connection.prepareStatement(query)) {
             psmt.setInt(1, id);
-            psmt.executeUpdate();
+            try (ResultSet rs = psmt.executeQuery()) {
+                if (rs.next()) {
+                    System.out.println("Customer found: ");
+                    System.out.println("ID: " + rs.getInt("customer_id"));
+                    System.out.println("Name: " + rs.getString("customer_name"));
+                    System.out.println("Birth Date: " + rs.getDate("birth_date"));
+                } else {
+                    System.out.println("No customer found with ID " + id);
+                }
+            }
         } catch (SQLException e) {
-            // log errors
-            System.out.println("Could not find custome with the given id.");
+            System.out.println("Could not find customer with the given ID.");
             System.out.println(e.getMessage());
         }
     }
+
 
     // get all customers
     public List<Customer> getAllCustomers() {
