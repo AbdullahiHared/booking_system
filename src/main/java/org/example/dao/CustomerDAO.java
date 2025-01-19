@@ -1,5 +1,6 @@
 package org.example.dao;
 
+import org.example.Main;
 import org.example.model.Customer;
 
 import java.sql.*;
@@ -82,23 +83,23 @@ public class CustomerDAO {
 
         } catch (SQLException e) {
             // log errors
-            System.out.println(e.getMessage());
-            System.out.println(e.getMessage());
+            System.out.println("Error fetching customers: " + e.getMessage());
         }
         return customers;
     }
 
 
     // delete customers
-    public void deleteCustomerBy(int customerId) {
-        String sql = "DELETE FROM Customers WHERE customer_id = ?";
+    public void deleteCustomer(String mail, String password) {
+        String sql = "DELETE FROM Customers WHERE email = ? AND password = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, customerId);
+            ps.setString(1, mail);
+            ps.setString(2, password);
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected > 0) {
-                System.out.println("Customer with ID " + customerId + " was deleted.");
+                System.out.println("Customer with email " + mail + " was deleted.");
             } else {
-                System.out.println("No customer found with ID " + customerId);
+                System.out.println("No customer found with the give email:  " + mail);
             }
         } catch (SQLException e) {
             System.err.println("Error deleting customer: " + e.getMessage());
