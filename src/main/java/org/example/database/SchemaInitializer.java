@@ -12,6 +12,8 @@ public class SchemaInitializer {
                         "customer_id INT AUTO_INCREMENT PRIMARY KEY, " +
                         "customer_name VARCHAR(100) NOT NULL, " +
                         "birth_date DATE NOT NULL" +
+                        "email VARCHAR(255) NOT NULL" +
+                        "password_hash VARCHAR(255) NOT NULL" +
                         ");",
 
                 // Create the Bookings table
