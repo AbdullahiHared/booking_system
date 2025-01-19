@@ -37,27 +37,31 @@ public class CustomerDAO {
         }
     }
 
-    // get customer by id
-    public void getCustomerById(int id) {
-        String query = "SELECT * FROM customers WHERE customer_id = ?";
-        try (PreparedStatement psmt = connection.prepareStatement(query)) {
-            psmt.setInt(1, id);
-            try (ResultSet rs = psmt.executeQuery()) {
-                if (rs.next()) {
-                    System.out.println("Customer found: ");
-                    System.out.println("ID: " + rs.getInt("customer_id"));
-                    System.out.println("Name: " + rs.getString("customer_name"));
-                    System.out.println("Birth Date: " + rs.getDate("birth_date"));
-                } else {
-                    System.out.println("No customer found with ID " + id);
-                }
+    // Login customer using mail  and password
+    public Customer login(String email, String password) throws SQLException {
+        String query = "SELECT * FROM customers WHERE email = ?  AND password = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, email);
+            ps.setString(2, password);
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                Customer customer = new Customer();
+                customer.setId(rs.getInt("customer_id"));
+                customer.setName(rs.getString("customer_name"));
+                customer.setBirthDate(rs.getDate("birth_date").toLocalDate());
+                customer.setEmail(rs.getString("email"));
+                customer.setPassword(rs.getString("password"));
+                return customer;
+            } else  {
+                System.out.println("Invalid mail or password");
             }
         } catch (SQLException e) {
-            System.out.println("Could not find customer with the given ID.");
-            System.out.println(e.getMessage());
+            System.out.println("Error during login: " + e.getMessage());
+            throw e;
         }
+        return null; // return null if login fails
     }
-
 
     // get all customers
     public List<Customer> getAllCustomers() {
