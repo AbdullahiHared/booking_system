@@ -3,6 +3,7 @@ package org.example.dao;
 import org.example.model.Customer;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -14,35 +15,25 @@ public class CustomerDAO {
     }
 
     // Add a new customer
-    public void insertCustomer(Customer customer) {
-        String query = "INSERT INTO customers(customer_id, customer_name, birth_date) VALUES (?, ?, ?)";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            preparedStatement.setInt(1, customer.getId());
-            preparedStatement.setString(2, customer.getName());
-            preparedStatement.setDate(3, customer.getBirthDate());
-            preparedStatement.executeUpdate();
+    public void insertCustomer(Customer customer) throws SQLException {
+        String sql = "INSERT INTO customers (customer_name, birth_date, email, password) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, customer.getName());
+            ps.setDate(2, Date.valueOf(customer.getBirthDate()));
+            ps.setString(3, customer.getEmail());
+            ps.setString(4, customer.getPassword());
 
-            // Retrieve the auto-generated ID
-            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    customer.setId(generatedKeys.getInt(1));
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected > 0) {
+                try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        customer.setId(generatedKeys.getInt(1));
+                    }
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // update customer
-    public void updateCustomer(Customer customer) {
-        String query = "UPDATE customers SET customer_name = ?, birth_date = ? WHERE customer_id = ?";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setInt(1, customer.getId());
-            preparedStatement.setString(2, customer.getName());
-            preparedStatement.setDate(3, customer.getBirthDate());
-            preparedStatement.executeUpdate();
-    } catch (SQLException e) {
-            System.out.println("Error updating: " + e.getMessage());
+            System.err.println("Error adding customer: " + e.getMessage());
+            throw e;
         }
     }
 
@@ -90,6 +81,13 @@ public class CustomerDAO {
             System.out.println(e.getMessage());
         }
         return customers;
+    }
+
+    // print user information
+    public void printUserInfo(String name, LocalDate birthdate) {
+        System.out.println("Your  information");
+        System.out.println("Name: " + name);
+        System.out.println("BirthDate: " + birthdate);
     }
 
     // delete customers
