@@ -87,12 +87,6 @@ public class CustomerDAO {
         return customers;
     }
 
-    // print user information
-    public void printUserInfo(String name, LocalDate birthdate) {
-        System.out.println("Your  information");
-        System.out.println("Name: " + name);
-        System.out.println("BirthDate: " + birthdate);
-    }
 
     // delete customers
     public void deleteCustomerById(int customerId) {
