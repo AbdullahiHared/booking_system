@@ -5,25 +5,24 @@ import java.time.LocalDate;
 
 public class Customer {
     private int customerId;
-    private String firstName;
-    private String lastName;
     private Date birthDate;
     private String name;
-    private int customerSeat;
-    public Customer(int customerId, String firstName, String lastName, LocalDate birthDate, int customerSeat) {
-        this.customerId = customerId;
-        this.firstName = firstName;
-        this.lastName = lastName;
+    private String mail;
+    private String password;
+    public Customer(String name, LocalDate birthDate, String mail, String password) {
+        this.name = name;
         this.birthDate = Date.valueOf(birthDate);
+        this.mail = mail;
+        this.password = password;
+    }
+
+    public Customer() {
+
     }
 
     // Getter and Setter for customerId
     public int getId() {
         return customerId;
-    }
-
-    public int getCustomerSeat() {
-        return this.customerSeat;
     }
 
     public void setId(int customerId) {
@@ -33,7 +32,6 @@ public class Customer {
     // Getter and Setter for firstName
 
     public String getName () {
-        name = firstName + " " + this.lastName;
         return this.name;
     }
 
@@ -49,4 +47,21 @@ public class Customer {
     public void setBirthDate(LocalDate birthDate) {
         this.birthDate = Date.valueOf(birthDate);
     }
+
+    public String getEmail() {
+        return mail;
+    }
+
+    public void setEmail(String email) {
+        this.mail = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+}
 }
