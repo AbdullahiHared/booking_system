@@ -75,7 +75,8 @@ public class CustomerDAO {
                 customer.setId(rs.getInt("customer_id"));
                 customer.setName(rs.getString("customer_name"));
                 customer.setBirthDate(rs.getDate("birth_date").toLocalDate());
-
+                customer.setEmail(rs.getString("email"));
+                customer.setPassword(rs.getString("password"));
                 customers.add(customer);
             }
 
@@ -89,7 +90,7 @@ public class CustomerDAO {
 
 
     // delete customers
-    public void deleteCustomerById(int customerId) {
+    public void deleteCustomerBy(int customerId) {
         String sql = "DELETE FROM Customers WHERE customer_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, customerId);
