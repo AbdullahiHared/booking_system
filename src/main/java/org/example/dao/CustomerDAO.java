@@ -53,6 +53,7 @@ public class CustomerDAO {
                 customer.setBirthDate(rs.getDate("birth_date").toLocalDate());
                 customer.setEmail(rs.getString("email"));
                 customer.setPassword(rs.getString("password"));
+                customer.getId();
                 return customer;
             } else  {
                 System.out.println("Invalid mail or password");

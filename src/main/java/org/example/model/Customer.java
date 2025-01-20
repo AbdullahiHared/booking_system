@@ -40,8 +40,8 @@ public class Customer {
     }
 
     // Getter and Setter for birthDate
-    public Date getBirthDate() {
-        return birthDate;
+    public String getBirthDate() {
+        return birthDate.toString();
     }
 
     public void setBirthDate(LocalDate birthDate) {
@@ -64,4 +64,4 @@ public class Customer {
         this.password = password;
     }
 }
-}
+

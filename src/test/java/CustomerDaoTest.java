@@ -16,7 +16,7 @@ public class CustomerDaoTest {
         try (Connection connection = DatabaseConnection.getConnection()) {
             // create customerDao instance
             CustomerDAO customerDao = new CustomerDAO(connection);
-            customerDao.deleteCustomer("m@gmail.com", "dhhsh");
+            customerDao.getAllCustomers().forEach(System.out::println);
         } catch (SQLException e) {
             System.out.println("Database connection failed.");
             System.out.println(e.getMessage());
