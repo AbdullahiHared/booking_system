@@ -1,17 +1,10 @@
-import org.example.dao.CustomerDAO;
 import org.example.database.DatabaseConnection;
-import org.example.database.SchemaInitializer;
 import org.example.model.Booking;
-import org.example.model.Customer;
 import org.example.dao.BookingDAO;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.time.DateTimeException;
-import java.time.LocalDate;
-import java.util.List;
 import java.util.Scanner;
-import java.util.regex.Pattern;
 
 public class BookingDAOTest {
     public static void main(String[] args) {
@@ -21,32 +14,28 @@ public class BookingDAOTest {
 
             System.out.println("=== Testing BookingDAO ===");
 
-            /*
-            // 1. Add a new booking
-            Booking newBooking = new Booking();
-            newBooking.setId(12); //
-            newBooking.setSeatNumber(5);
-            bookingDao.addBooking(newBooking);
-            if(newBooking != null) {
-                System.out.println("Booking added with ID: " + newBooking.getId());
-            } else {
-                System.out.println("Booking not added.");
+            // test. GET BOOKING BY ID
+
+            Booking retrievedBooking = bookingDao.getBookingById(12);
+            int seat = retrievedBooking.getSeat();
+            System.out.println("The previous seat number is: " + seat);
+
+            int newSeat = 25;
+            System.out.println("The new seat number is: " + newSeat);
+
+            retrievedBooking.setSeatNumber(newSeat);
+            retrievedBooking.setId(12);
+
+            try {
+                bookingDao.updateBooking(retrievedBooking, retrievedBooking.getId());
+                System.out.println("Successfully updated  booking.");
+            } catch (SQLException e) {
+                System.out.println("Could not update the booking:");
             }
 
-            // test. GET BOOKING BY ID
-            int testing_id = 12;
-            Booking booking = bookingDao.getBookingById(testing_id);
-            int seat = booking.getSeat();
-            */
-             // Get all bookings
-            // System.out.println("All bookings:");
-            List<Booking> bookingList = bookingDao.getAllBookings();
-            for (Booking booking : bookingList) {
-                System.out.println(booking.getId());
-                System.out.println(booking.getSeat());
-            }
+            // update booking
+            bookingDao.updateBooking(retrievedBooking, retrievedBooking.getId());
         } catch (SQLException e) {
-            System.out.println("Database connection failed.");
             System.out.println(e.getMessage());
         }
     }
