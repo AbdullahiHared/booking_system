@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
@@ -30,13 +31,20 @@ public class BookingDAOTest {
                 System.out.println("Booking added with ID: " + newBooking.getId());
             } else {
                 System.out.println("Booking not added.");
-            }  */
+            }
 
             // test. GET BOOKING BY ID
             int testing_id = 12;
             Booking booking = bookingDao.getBookingById(testing_id);
             int seat = booking.getSeat();
-            System.out.println("Booking ID: " + testing_id + " has seat number: " + seat);
+            */
+             // Get all bookings
+            // System.out.println("All bookings:");
+            List<Booking> bookingList = bookingDao.getAllBookings();
+            for (Booking booking : bookingList) {
+                System.out.println(booking.getId());
+                System.out.println(booking.getSeat());
+            }
         } catch (SQLException e) {
             System.out.println("Database connection failed.");
             System.out.println(e.getMessage());
