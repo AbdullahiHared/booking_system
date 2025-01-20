@@ -76,10 +76,10 @@ public class BookingDAO {
     }
 
     // Update a booking
-    public void updateBooking(Booking booking) throws SQLException {
-        String query = "UPDATE Bookings SET customer_id = ?, passenger_seat = ? WHERE booking_id = ?";
+    public void updateBooking(Booking booking, int customerId) throws SQLException {
+        String query = "UPDATE Bookings SET customer_id = ?, passenger_seat = ? WHERE customer_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setInt(1, booking.getId());
+            ps.setInt(1, customerId); // This is incorrect
             ps.setInt(2, booking.getSeat());
             ps.setInt(3, booking.getId());
             ps.executeUpdate();
