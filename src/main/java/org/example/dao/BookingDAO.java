@@ -17,8 +17,7 @@ public class BookingDAO {
     public void addBooking(Booking booking) throws SQLException {
         String sql = "INSERT INTO Bookings (customer_id, passenger_seat) VALUES (?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            ResultSet rs = ps.executeQuery();
-            ps.setInt(1, booking.getCustomerId(rs.getInt("customer_id")));
+            ps.setInt(1, booking.getId());
             ps.setInt(2, booking.getSeat());
 
             int affectedRows = ps.executeUpdate();
@@ -44,7 +43,7 @@ public class BookingDAO {
             while (rs.next()) {
                 Booking booking = new Booking();
                 booking.setId(rs.getInt("booking_id"));
-                booking.getCustomerId(rs.getInt("customer_id"));
+                booking.setId(rs.getInt("customer_id"));
                 booking.setSeatNumber(rs.getInt("passenger_seat"));
                 bookings.add(booking);
             }
@@ -56,20 +55,22 @@ public class BookingDAO {
 
     // Get booking by ID
     public Booking getBookingById(int id) throws SQLException {
-        String query = "SELECT * FROM Bookings WHERE booking_id = ?";
+        String query = "SELECT * FROM Bookings WHERE customer_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     Booking booking = new Booking();
                     booking.setId(rs.getInt("booking_id"));
-                    booking.getCustomerId(rs.getInt("customer_id"));
-                    booking.getSeat();
+                    booking.setId(rs.getInt("customer_id"));
+                    booking.setSeatNumber(rs.getInt("passenger_seat"));
+                    System.out.println("Successfully fetched booking with id: " + id);
                     return booking;
                 }
             }
         } catch (SQLException e) {
             System.err.println("Error fetching booking by ID: " + e.getMessage());
+            throw e;
         }
         return null; // Return null if no booking is found
     }
@@ -78,8 +79,7 @@ public class BookingDAO {
     public void updateBooking(Booking booking) throws SQLException {
         String query = "UPDATE Bookings SET customer_id = ?, passenger_seat = ? WHERE booking_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
-            ResultSet rs = ps.executeQuery();
-            ps.setInt(1, booking.getCustomerId(rs.getInt("customer_id")));
+            ps.setInt(1, booking.getId());
             ps.setInt(2, booking.getSeat());
             ps.setInt(3, booking.getId());
             ps.executeUpdate();
