@@ -36,4 +36,23 @@ public class SeatsDAO {
             throw e;
         }
     }
+
+    // get all saved seats
+    public List<String> getAllSeats() {
+        List<String> seats = new ArrayList<>();
+        String query = "SELECT seat_number FROM booked_seats";
+
+        try (PreparedStatement ps = connection.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                seats.add(rs.getString("seat_number")); // Add each seat_number to the list
+            }
+        } catch (SQLException e) {
+            System.out.println("Error retrieving seats from db: " + e.getMessage());
+        }
+
+        return seats;
+    }
+
 }
