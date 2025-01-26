@@ -9,6 +9,7 @@ public class Customer {
     private String name;
     private String mail;
     private String password;
+
     public Customer(String name, LocalDate birthDate, String mail, String password) {
         this.name = name;
         this.birthDate = Date.valueOf(birthDate);

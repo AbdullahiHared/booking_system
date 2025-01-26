@@ -3,16 +3,16 @@ package org.example.model;
 public class Booking {
     private int id;
     private Customer customer;
-    private int seat;
+    private String seat;
 
     // Constructors
-    public Booking(int id, int seat, Customer customer) {
-        this.id = id;
-        this.seat = seat;
-        this.customer = customer;
+    public Booking(int customerId, String seatNumber) {
+        this.setCustomerId(customerId); // Use setCustomerId to set the customer ID
+        this.seat = seatNumber; // This line causes the error
     }
 
-    public Booking() {}
+    public Booking() {
+    }
 
     // Getters and Setters
     public int getId() {
@@ -23,16 +23,13 @@ public class Booking {
         this.id = id;
     }
 
-    public int getSeat() {
+    public String getSeat() {
         return seat;
     }
 
-    public void setSeat(int seat) {
-        this.seat = seat;
-    }
 
-    public Customer getCustomer() {
-        return customer;
+    public void setSeat(String seat) {
+        this.seat = seat;
     }
 
     public void setCustomer(Customer customer) {
