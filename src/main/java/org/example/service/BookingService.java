@@ -48,18 +48,6 @@ public class BookingService {
         }
    }
 
-    // method for updating seat availability
-    private void markSeatAsBooked(String seatNumber) {
-        for (int i = 0; i < busSeats.length; i++) {
-            for (int j = 0; j < busSeats[i].length; j++) {
-                if (busSeats[i][j].equals(seatNumber)) {
-                    busSeats[i][j] = "X";
-                    break;
-                }
-            }
-        }
-    }
-
     // check if seats is valid
     private boolean isValidSeat(String seatNumber) {
         for (String[] row : busSeats) {
@@ -81,6 +69,52 @@ public class BookingService {
     // check if customer exists
     private boolean customerExists(int customerId) throws SQLException {
         return customerDAO.getCustomerById(customerId) != null;
+    }
+
+    public boolean addBooking(int customerId, String seatNumber) {
+        try {
+            if(!isValidSeat(seatNumber)) {
+                logger.warning("Invalid seat number:  "  + seatNumber);
+                return false;
+            }
+
+            if (!isSeatAvailable(seatNumber)) {
+                logger.warning("Seat " + seatNumber + " is already booked!");
+                return false;
+            }
+
+            if(customerExists(customerId)) {
+                logger.warning("Customer with ID " + customerId + " does not exist.");
+                return false;
+            }
+
+            // Add booking to the database
+            bookingDAO.addBooking(new Booking(customerId, seatNumber));
+
+            // Add the seat as booked in the booked_seats database
+            seatsDAO.addSeat(seatNumber);
+
+            // Mark seat as booked
+            markSeatAsBooked(seatNumber);
+
+            logger.info("Booking added successfully for seat " + seatNumber);
+            return true;
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error adding booking: " + e.getMessage(), e);
+            return false;
+        }
+    }
+
+    // method for updating seat availability
+    private void markSeatAsBooked(String seatNumber) {
+        for (int i = 0; i < busSeats.length; i++) {
+            for (int j = 0; j < busSeats[i].length; j++) {
+                if (busSeats[i][j].equals(seatNumber)) {
+                    busSeats[i][j] = "X";
+                    break;
+                }
+            }
+        }
     }
 
 }
