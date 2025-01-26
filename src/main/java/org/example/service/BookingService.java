@@ -181,4 +181,8 @@ public class BookingService {
         }
     }
 
+    public List<Booking> getBookingsByCustomerId(int customerId) throws SQLException {
+            return bookingDAO.getBookingsByCustomerId(customerId);
+    }
+
 }
