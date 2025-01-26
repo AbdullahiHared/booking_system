@@ -26,4 +26,15 @@ public class BookingService {
         this.busSeats = initializeSeats(); // Initialize the busSeats array
         updateSeatsFromDatabase(); // Update the busSeats array with booked seats from the database
     }
+
+    private String[][] initializeSeats() {
+        String[][] seats = new String[9][5]; // 9 rows, 5 seats each
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 5; j++) {
+                seats[i][j] = (i + 1) + "" + (char) ('A' + j); // seat format:
+            }
+        }
+        return  seats;
+    }
+
 }
