@@ -60,4 +60,27 @@ public class BookingService {
         }
     }
 
+    // check if seats is valid
+    private boolean isValidSeat(String seatNumber) {
+        for (String[] row : busSeats) {
+            for (String seat : row) {
+                if (seat.equals(seatNumber)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    // check seat availability
+    private boolean isSeatAvailable(String seatNumber) throws SQLException {
+        List<String> bookedSeats = seatsDAO.getAllSeats();
+        return !bookedSeats.contains(seatNumber);
+    }
+
+    // check if customer exists
+    private boolean customerExists(int customerId) throws SQLException {
+        return customerDAO.getCustomerById(customerId) != null;
+    }
+
 }
