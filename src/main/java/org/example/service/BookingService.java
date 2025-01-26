@@ -41,11 +41,23 @@ public class BookingService {
         try {
             List<String> bookedSeats = seatsDAO.getAllSeats();
             for (String seat : bookedSeats) {
-                markSeakAsBooked(seat);
+                markSeatAsBooked(seat);
             }
         }  catch (Exception e) {
             logger.log(Level.SEVERE, "Error updating seats from database: " + e.getMessage(), e);
         }
    }
+
+    // method for updating seat availability
+    private void markSeatAsBooked(String seatNumber) {
+        for (int i = 0; i < busSeats.length; i++) {
+            for (int j = 0; j < busSeats[i].length; j++) {
+                if (busSeats[i][j].equals(seatNumber)) {
+                    busSeats[i][j] = "X";
+                    break;
+                }
+            }
+        }
+    }
 
 }
