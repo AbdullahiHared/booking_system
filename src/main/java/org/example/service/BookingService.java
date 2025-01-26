@@ -117,4 +117,44 @@ public class BookingService {
         }
     }
 
+    public boolean cancelBooking(int bookingId) {
+        try {
+            Booking booking = bookingDAO.getBookingById(bookingId);
+            if(booking == null) {
+                logger.warning("Booking with ID " + bookingId + " not found.");
+                return false;
+            }
+
+            // Delete the booking from the database
+            bookingDAO.deleteBookingById(bookingId);
+
+            // Remove seat from the booked_seats database
+            seatsDAO.deleteSeat(booking.getSeat());
+
+            // Mark the seat as available in the busSeats array
+            markSeatAsAvailable(String.valueOf(booking.getSeat()));
+
+            logger.info("Booking with ID " + bookingId + " canceled successfully.");
+            return true;
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error canceling booking: " + e.getMessage(), e);
+            return false;
+        }
+    }
+
+    private void markSeatAsAvailable(String seatNumber) {
+        for (int i = 0; i < busSeats.length; i++) {
+            for (int j = 0; j < busSeats[i].length; j++) {
+                if (busSeats[i][j].equals("X") && getSeatNumber(i, j).equals(seatNumber)) {
+                    busSeats[i][j] = seatNumber; // Mark as available
+                    break;
+                }
+            }
+        }
+    }
+
+    private String getSeatNumber(int row, int col) {
+        return (row + 1) + "" + (char) ('A' + col);
+    }
+
 }
