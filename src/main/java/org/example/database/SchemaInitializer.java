@@ -18,7 +18,7 @@ public class SchemaInitializer {
                 "CREATE TABLE IF NOT EXISTS Bookings (" +
                         "booking_id INT AUTO_INCREMENT PRIMARY KEY, " +
                         "customer_id INT NOT NULL, " +
-                        "passenger_seat INT NOT NULL, " +
+                        "seat_number VARCHAR(255) NOT NULL, " +
                         "FOREIGN KEY (customer_id) REFERENCES Customers(customer_id) ON DELETE CASCADE, " +
                         "UNIQUE(passenger_seat)" +
                         ");",
