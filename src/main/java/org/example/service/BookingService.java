@@ -157,4 +157,28 @@ public class BookingService {
         return (row + 1) + "" + (char) ('A' + col);
     }
 
+
+    public void displayAvailableSeats() {
+        try  {
+            List<String> bookedSeats = seatsDAO.getAllSeats();
+            for (int i = 0; i < busSeats.length; i++) {
+                for (int j = 0; j < busSeats[i].length; j++) {
+                    if (bookedSeats.contains(busSeats[i][j])) {
+                        busSeats[i][j] = "X";
+                    }
+                }
+            }
+
+            // print the updated busSeats array
+            for (String[] row : busSeats) {
+                for (String seat: row) {
+                    System.out.println(seat + " ");
+                }
+                System.out.println();
+            }
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error displaying available seats: " + e.getMessage(), e);
+        }
+    }
+
 }
