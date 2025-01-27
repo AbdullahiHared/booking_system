@@ -146,4 +146,39 @@ public class Main {
         System.out.println("\\n=== Available seats===\"");
         bookingService.displayAvailableSeats();
     }
+
+    private static void cancelBooking() {
+        if (currentCustomer == null) {
+            System.out.println("You must be logged to cancel a booking.");
+            return;
+        }
+
+        System.out.println("\\n=== Cancel Booking ===\"");
+        try {
+            var bookings = bookingService.getBookingsByCustomerId(currentCustomer.getId());
+            if (bookings.isEmpty()) {
+                System.out.println("You have not bookings to cancel.");
+                return;
+            }
+
+            System.out.println("Your bookings:");
+            for (var booking : bookings) {
+                System.out.println("Booking ID: " + booking.getId() + ", Seat: " + booking.getSeat());
+            }
+
+            System.out.print("Enter the booking ID to cancel: ");
+            int bookingID = scanner.nextInt();
+            scanner.nextLine();
+
+            if (bookingService.cancelBooking(bookingID)) {
+                System.out.println("Booking cancelled successfully.");
+            } else {
+                System.out.println("Failed to cancel booking.");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error cancelling booking: " + e.getMessage());
+        }
+    }
+
 }
