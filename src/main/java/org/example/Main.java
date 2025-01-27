@@ -18,10 +18,11 @@ import java.util.Scanner;
 public class Main {
     private static BookingService bookingService;
     private static Customer currentCustomer;
-    Scanner scanner = scanner = new Scanner(System.in);
+    private static Scanner scanner;;
 
     public static void main(String[] args) {
-        Scanner scanner = scanner = new Scanner(System.in);
+        // Initialize Scanner
+        scanner = new Scanner(System.in);
         try (Connection connection = DatabaseConnection.getConnection()) {
             // initialize DAOs and services
             BookingDAO bookingDAO = new BookingDAO(connection);
@@ -73,7 +74,7 @@ public class Main {
     }
 
     private static void registerCustomer() {
-        Scanner scanner = scanner = new Scanner(System.in);
+        scanner = scanner = new Scanner(System.in);
         System.out.println("\n=== Register ===");
         System.out.print("Enter your name: ");
         String name = scanner.nextLine();
@@ -98,6 +99,28 @@ public class Main {
             System.err.println("Invalid date format. Please use YYYY-MM-DD.");
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private static void loginCustomer() {
+        scanner = new Scanner(System.in);
+        System.out.println("\n=== Login ===");
+        System.out.print("Enter your email: ");
+        String email = scanner.nextLine();
+        System.out.print("Enter your password: ");
+        String password = scanner.nextLine();
+
+        CustomerDAO customerDAO = new CustomerDAO(DatabaseConnection.getConnection());
+
+        try {
+            currentCustomer = customerDAO.login(email, password);
+            if (currentCustomer != null) {
+                System.out.println("Login successful! Welcome, " + currentCustomer.getName() + ".");
+            } else {
+                System.out.println("Login failed. Invalid email or password.");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error during login: " + e.getMessage());
         }
     }
 }
