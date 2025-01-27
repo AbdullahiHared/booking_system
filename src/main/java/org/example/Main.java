@@ -24,7 +24,41 @@ public class Main {
             SeatsDAO seatsDAO = new SeatsDAO(connection);
             bookingService = new BookingService(bookingDAO, customerDAO, seatsDAO);
 
+            while(true) {
+                System.out.println("\n=== Bus Booking System ===");
+                System.out.println("1. Register");
+                System.out.println("2. Login");
+                System.out.println("3. Login");
+                System.out.println("4. View Available seats");
+                System.out.println("5. Cancel Booking.");
+                System.out.println("6. Exit");
+                System.out.println("Choose an options: ");
+                int choice = scanner.nextInt();
+                scanner.nextLine();
 
+                switch (choice){
+                    case 1 :
+                        registerCustomer();
+                        break;
+                    case 2:
+                        loginCustomer();
+                        break;
+                    case 3:
+                        bookSeat();
+                        break;
+                    case 4:
+                        viewAvailableSeats();
+                        break;
+                    case 5:
+                        cancelBooking();
+                        break;
+                    case 6:
+                        System.out.println("Exiting the program. Goodbye!");
+                        return;
+                    default:
+                        System.out.println("Invalid option. Please try again.");
+                }
+            }
 
         } catch (SQLException e) {
             System.err.println("Error connecting to the database: " + e.getMessage());
@@ -32,6 +66,4 @@ public class Main {
             scanner.close();
         }
     }
-
-
 }
