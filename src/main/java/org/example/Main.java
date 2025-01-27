@@ -123,4 +123,22 @@ public class Main {
             System.err.println("Error during login: " + e.getMessage());
         }
     }
+
+    private static void bookSeat(){
+        if (currentCustomer == null) {
+            System.out.println("You must be logged in to book a seat.");
+            return;
+        }
+
+        System.out.println("\n=== Book a Seat ===");
+        bookingService.displayAvailableSeats();
+        System.out.print("Enter the seat number you want to book: ");
+        String seatNumber = scanner.nextLine();
+
+        if (bookingService.addBooking(currentCustomer.getId(), seatNumber)) {
+            System.out.println("Seat " + seatNumber + " booked successfully");
+        } else {
+            System.out.println("Failed to book seat " + seatNumber + ".");
+        }
+    }
 }
