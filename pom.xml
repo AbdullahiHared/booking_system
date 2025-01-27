@@ -27,6 +27,13 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
+        <dependency>
+            <groupId>de.svenkubiak</groupId>
+            <artifactId>jBCrypt</artifactId>
+            <version>0.4</version>
+        </dependency>
+
     </dependencies>
 
 </project>
