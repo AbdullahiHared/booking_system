@@ -141,4 +141,9 @@ public class Main {
             System.out.println("Failed to book seat " + seatNumber + ".");
         }
     }
+
+    private static void viewAvailableSeats() {
+        System.out.println("\\n=== Available seats===\"");
+        bookingService.displayAvailableSeats();
+    }
 }
