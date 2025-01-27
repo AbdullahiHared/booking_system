@@ -18,17 +18,20 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = scanner = new Scanner(System.in);
         try (Connection connection = DatabaseConnection.getConnection()) {
+            // initialize DAOs and services
             BookingDAO bookingDAO = new BookingDAO(connection);
             CustomerDAO customerDAO = new CustomerDAO(connection);
             SeatsDAO seatsDAO = new SeatsDAO(connection);
             bookingService = new BookingService(bookingDAO, customerDAO, seatsDAO);
 
 
-            // Main menu loop here
+
         } catch (SQLException e) {
             System.err.println("Error connecting to the database: " + e.getMessage());
         } finally {
             scanner.close();
         }
     }
+
+
 }
