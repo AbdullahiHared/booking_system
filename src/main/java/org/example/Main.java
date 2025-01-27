@@ -9,11 +9,16 @@ import org.example.service.BookingService;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
+
 
 public class Main {
     private static BookingService bookingService;
     private static Customer currentCustomer;
+    Scanner scanner = scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
         Scanner scanner = scanner = new Scanner(System.in);
@@ -64,6 +69,35 @@ public class Main {
             System.err.println("Error connecting to the database: " + e.getMessage());
         } finally {
             scanner.close();
+        }
+    }
+
+    private static void registerCustomer() {
+        Scanner scanner = scanner = new Scanner(System.in);
+        System.out.println("\n=== Register ===");
+        System.out.print("Enter your name: ");
+        String name = scanner.nextLine();
+        System.out.print("Enter your email: ");
+        String email = scanner.nextLine();
+        System.out.print("Enter your password: ");
+        String password = scanner.nextLine();
+        System.out.print("Enter your birth date (YYYY-MM-DD): ");
+        String birthDateStr = scanner.nextLine();
+        try {
+            LocalDate birthDate = LocalDate.parse(birthDateStr, DateTimeFormatter.ISO_LOCAL_DATE);
+            Customer customer = new Customer();
+            customer.setName(name);
+            customer.setEmail(email);
+            customer.setPassword(password);
+            customer.setBirthDate(birthDate);
+
+            CustomerDAO customerDAO = new CustomerDAO(DatabaseConnection.getConnection());
+            customerDAO.insertCustomer(customer);
+            System.out.println("Registration successful! You can now log in.");
+        } catch (DateTimeParseException e) {
+            System.err.println("Invalid date format. Please use YYYY-MM-DD.");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 }
