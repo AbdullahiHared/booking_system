@@ -90,6 +90,20 @@ public class CustomerDAO {
         return customers;
     }
 
+    // delete customer by ID
+    public void deleteCustomer(int customerId) throws SQLException {
+        String query = "DELETE FROM customers WHERE id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, customerId);
+            int rowsDeleted = statement.executeUpdate();
+            if (rowsDeleted > 0) {
+                System.out.println("Customer deleted successfully.");
+            } else {
+                System.out.println("No customer found with ID: " + customerId);
+            }
+        }
+    }
+
     // Delete customer by email and password
     public void deleteCustomer(String email, String password) throws SQLException {
         String sql = "DELETE FROM customers WHERE email = ? AND password = ?";
