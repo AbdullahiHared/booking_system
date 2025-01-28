@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.validator.routines.EmailValidator;
 
 public class BookingService {
 
@@ -179,6 +180,13 @@ public class BookingService {
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error displaying available seats: " + e.getMessage(), e);
         }
+    }
+
+    public static boolean isValidEmailAddress(String email) {
+        // create the EmailValidator instance
+        EmailValidator validator = EmailValidator.getInstance();
+        // check for valid email addresses using isValid method
+        return validator.isValid(email);
     }
 
     public List<Booking> getBookingsByCustomerId(int customerId) throws SQLException {
