@@ -91,8 +91,8 @@ public class CustomerDAO {
     }
 
     // delete customer by ID
-    public void deleteCustomer(int customerId) throws SQLException {
-        String query = "DELETE FROM customers WHERE id = ?";
+    public void deleteCustomerById(int customerId) throws SQLException {
+        String query = "DELETE FROM customers WHERE customer_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, customerId);
             int rowsDeleted = statement.executeUpdate();
