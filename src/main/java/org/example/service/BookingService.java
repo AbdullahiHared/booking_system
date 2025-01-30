@@ -20,6 +20,7 @@ public class BookingService {
     private final SeatsDAO seatsDAO;
     private final String[][] busSeats;
 
+
     public BookingService(BookingDAO bookingDAO, CustomerDAO customerDAO, SeatsDAO seatsDAO) {
         this.bookingDAO = bookingDAO;
         this.customerDAO = customerDAO;
@@ -84,9 +85,9 @@ public class BookingService {
                 return false;
             }
 
-            if(customerExists(customerId)) {
+            if(!customerExists(customerId)) {
                 logger.warning("Customer with ID " + customerId + " does not exist.");
-                return false;
+                return true;
             }
 
             // Add booking to the database
