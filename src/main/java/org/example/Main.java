@@ -4,6 +4,7 @@ import org.example.dao.BookingDAO;
 import org.example.dao.CustomerDAO;
 import org.example.dao.SeatsDAO;
 import org.example.database.DatabaseConnection;
+import org.example.model.Booking;
 import org.example.model.Customer;
 import org.example.service.BookingService;
 
@@ -13,6 +14,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -37,10 +39,11 @@ public class Main {
                     System.out.println("3. Book a seat");
                     System.out.println("4. View Available seats");
                     System.out.println("5. Cancel Booking");
-                    System.out.println("6. Exit");
+                    System.out.println("6. Find Booking");
+                    System.out.println("7. Exit");
                     System.out.print("Choose an option: ");
 
-                    int choice = getValidIntegerInput(1, 6); // Validate menu choice
+                    int choice = getValidIntegerInput(1, 7); // Validate menu choice
                     scanner.nextLine(); // Consume newline
 
                     switch (choice) {
@@ -60,6 +63,9 @@ public class Main {
                             cancelBooking();
                             break;
                         case 6:
+                            findBooking();
+                            break;
+                        case 7:
                             System.out.println("Exiting the program. Goodbye!");
                             return;
                         default:
@@ -183,7 +189,7 @@ public class Main {
         }
     }
 
-    private static void viewAvailableSeats() {
+    private static void viewAvailableSeats() throws SQLException {
         System.out.println("\n=== Available Seats ===");
         bookingService.displayAvailableSeats();
     }
@@ -218,6 +224,30 @@ public class Main {
             }
         } catch (SQLException e) {
             System.err.println("Error cancelling booking: " + e.getMessage());
+        }
+    }
+
+    private static void findBooking() {
+        if (currentCustomer == null) {
+            System.out.println("You must be logged in to find a booking.");
+            return;
+        }
+
+        System.out.println("\n=== Find Booking ===");
+        try {
+            // Fetch the booking for the current customer
+            Booking booking = bookingService.getBookingByCustomerId(currentCustomer.getId());
+
+            if (booking != null) {
+                System.out.println("\nBooking Details:");
+                System.out.println("Booking ID: " + booking.getId());
+                System.out.println("Seat Number: " + booking.getSeat());
+                System.out.println("Customer ID: " + booking.getCustomerId());
+            } else {
+                System.out.println("No booking found for the current user.");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error finding booking: " + e.getMessage());
         }
     }
 

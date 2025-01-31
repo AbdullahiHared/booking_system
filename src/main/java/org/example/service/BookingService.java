@@ -20,7 +20,6 @@ public class BookingService {
     private final SeatsDAO seatsDAO;
     private final String[][] busSeats;
 
-
     public BookingService(BookingDAO bookingDAO, CustomerDAO customerDAO, SeatsDAO seatsDAO) {
         this.bookingDAO = bookingDAO;
         this.customerDAO = customerDAO;
@@ -33,24 +32,24 @@ public class BookingService {
         String[][] seats = new String[9][5]; // 9 rows, 5 seats each
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 5; j++) {
-                seats[i][j] = (i + 1) + "" + (char) ('A' + j); // seat format:
+                seats[i][j] = (i + 1) + "" + (char) ('A' + j); // seat format: e.g., "1A", "1B", etc.
             }
         }
-        return  seats;
+        return seats;
     }
 
-   private void updateSeatsFromDatabase() {
+    private void updateSeatsFromDatabase() {
         try {
             List<String> bookedSeats = seatsDAO.getAllSeats();
             for (String seat : bookedSeats) {
                 markSeatAsBooked(seat);
             }
-        }  catch (Exception e) {
+        } catch (Exception e) {
             logger.log(Level.SEVERE, "Error updating seats from database: " + e.getMessage(), e);
         }
-   }
+    }
 
-    // check if seats is valid
+    // Check if a seat is valid
     private boolean isValidSeat(String seatNumber) {
         for (String[] row : busSeats) {
             for (String seat : row) {
@@ -62,21 +61,22 @@ public class BookingService {
         return false;
     }
 
-    // check seat availability
+    // Check if a seat is available
     private boolean isSeatAvailable(String seatNumber) throws SQLException {
         List<String> bookedSeats = seatsDAO.getAllSeats();
         return !bookedSeats.contains(seatNumber);
     }
 
-    // check if customer exists
+    // Check if a customer exists
     private boolean customerExists(int customerId) throws SQLException {
         return customerDAO.getCustomerById(customerId) != null;
     }
 
+    // Add a booking
     public boolean addBooking(int customerId, String seatNumber) {
         try {
-            if(!isValidSeat(seatNumber)) {
-                logger.warning("Invalid seat number:  "  + seatNumber);
+            if (!isValidSeat(seatNumber)) {
+                logger.warning("Invalid seat number: " + seatNumber);
                 return false;
             }
 
@@ -85,9 +85,9 @@ public class BookingService {
                 return false;
             }
 
-            if(!customerExists(customerId)) {
+            if (!customerExists(customerId)) {
                 logger.warning("Customer with ID " + customerId + " does not exist.");
-                return true;
+                return false;
             }
 
             // Add booking to the database
@@ -107,7 +107,7 @@ public class BookingService {
         }
     }
 
-    // method for updating seat availability
+    // Mark a seat as booked
     private void markSeatAsBooked(String seatNumber) {
         for (int i = 0; i < busSeats.length; i++) {
             for (int j = 0; j < busSeats[i].length; j++) {
@@ -119,10 +119,11 @@ public class BookingService {
         }
     }
 
+    // Cancel a booking
     public boolean cancelBooking(int bookingId) {
         try {
             Booking booking = bookingDAO.getBookingById(bookingId);
-            if(booking == null) {
+            if (booking == null) {
                 logger.warning("Booking with ID " + bookingId + " not found.");
                 return false;
             }
@@ -134,7 +135,7 @@ public class BookingService {
             seatsDAO.deleteSeat(booking.getSeat());
 
             // Mark the seat as available in the busSeats array
-            markSeatAsAvailable(String.valueOf(booking.getSeat()));
+            markSeatAsAvailable(booking.getSeat());
 
             logger.info("Booking with ID " + bookingId + " canceled successfully.");
             return true;
@@ -144,6 +145,7 @@ public class BookingService {
         }
     }
 
+    // Mark a seat as available
     private void markSeatAsAvailable(String seatNumber) {
         for (int i = 0; i < busSeats.length; i++) {
             for (int j = 0; j < busSeats[i].length; j++) {
@@ -155,13 +157,14 @@ public class BookingService {
         }
     }
 
+    // Get seat number from row and column
     private String getSeatNumber(int row, int col) {
         return (row + 1) + "" + (char) ('A' + col);
     }
 
-
+    // Display available seats
     public void displayAvailableSeats() {
-        try  {
+        try {
             List<String> bookedSeats = seatsDAO.getAllSeats();
             for (int i = 0; i < busSeats.length; i++) {
                 for (int j = 0; j < busSeats[i].length; j++) {
@@ -171,7 +174,7 @@ public class BookingService {
                 }
             }
 
-            // print the updated busSeats array
+            // Print the updated busSeats array
             for (String[] row : busSeats) {
                 for (String seat : row) {
                     System.out.printf("%-4s", seat);
@@ -183,15 +186,19 @@ public class BookingService {
         }
     }
 
+    // Validate email address
     public static boolean isValidEmailAddress(String email) {
-        // create the EmailValidator instance
         EmailValidator validator = EmailValidator.getInstance();
-        // check for valid email addresses using isValid method
         return validator.isValid(email);
     }
 
+    // Get bookings by customer ID
     public List<Booking> getBookingsByCustomerId(int customerId) throws SQLException {
-            return bookingDAO.getBookingsByCustomerId(customerId);
+        return bookingDAO.getBookingsByCustomerId(customerId);
     }
 
+    // Find a booking by customer ID
+    public Booking getBookingByCustomerId(int customerId) throws SQLException {
+        return bookingDAO.getBookingByCustomerId(customerId);
+    }
 }

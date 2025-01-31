@@ -56,9 +56,30 @@ public class BookingDAO {
         return bookings;
     }
 
-    // Get booking by ID
+   // get booking by customer id
     public Booking getBookingByCustomerId(int id) throws SQLException {
         String query = "SELECT * FROM Bookings WHERE customer_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Booking booking = new Booking();
+                    booking.setId(rs.getInt("booking_id")); // Set booking_id
+                    booking.setCustomerId(rs.getInt("customer_id")); // Set customer_id
+                    booking.setSeat(rs.getString("passenger_seat")); // Set seat
+                    return booking;
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching booking by ID: " + e.getMessage());
+            throw e;
+        }
+        return null; // Return null if no booking is found
+    }
+
+    // Get booking by ID
+    public Booking getBookingById(int id) throws SQLException {
+        String query = "SELECT * FROM Bookings WHERE booking_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
