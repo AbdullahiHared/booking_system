@@ -15,10 +15,12 @@ public class BookingDAO {
 
     // Add a new booking
     public void addBooking(Booking booking) throws SQLException {
-        String sql = "INSERT INTO Bookings (customer_id, passenger_seat) VALUES (?, ?)";
+        System.out.println("Trying to add booking for customer with ID: " + booking.getCustomerId());
+        String sql = "INSERT INTO Bookings (booking_id, customer_id, passenger_seat) VALUES (?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            ps.setInt(1, booking.getCustomerId()); // Use getCustomerId() instead of getId()
-            ps.setString(2, booking.getSeat());
+            ps.setInt(1, booking.getId());
+            ps.setInt(2, booking.getCustomerId());
+            ps.setString(3, booking.getSeat());
 
             int affectedRows = ps.executeUpdate();
             if (affectedRows > 0) {
@@ -55,8 +57,8 @@ public class BookingDAO {
     }
 
     // Get booking by ID
-    public Booking getBookingById(int id) throws SQLException {
-        String query = "SELECT * FROM Bookings WHERE booking_id = ?"; // Use booking_id instead of customer_id
+    public Booking getBookingByCustomerId(int id) throws SQLException {
+        String query = "SELECT * FROM Bookings WHERE customer_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
@@ -110,6 +112,7 @@ public class BookingDAO {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Booking booking = new Booking();
+                    booking.setId(rs.getInt("booking_id"));
                     booking.setCustomerId(rs.getInt("customer_id")); // Set customer_id
                     booking.setSeat(rs.getString("passenger_seat")); // Set seat
                     bookings.add(booking);
