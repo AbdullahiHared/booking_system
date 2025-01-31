@@ -12,60 +12,63 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.InputMismatchException;
 import java.util.Scanner;
-
 
 public class Main {
     private static BookingService bookingService;
     private static Customer currentCustomer;
-    private static Scanner scanner;;
+    private static Scanner scanner;
 
     public static void main(String[] args) {
-        // Initialize Scanner
         scanner = new Scanner(System.in);
         try (Connection connection = DatabaseConnection.getConnection()) {
-            // initialize DAOs and services
+            // Initialize DAOs and services
             BookingDAO bookingDAO = new BookingDAO(connection);
             CustomerDAO customerDAO = new CustomerDAO(connection);
             SeatsDAO seatsDAO = new SeatsDAO(connection);
             bookingService = new BookingService(bookingDAO, customerDAO, seatsDAO);
 
-            while(true) {
-                System.out.println("\n=== Bus Booking System ===");
-                System.out.println("1. Register");
-                System.out.println("2. Login");
-                System.out.println("3. Login");
-                System.out.println("4. View Available seats");
-                System.out.println("5. Cancel Booking.");
-                System.out.println("6. Exit");
-                System.out.println("Choose an options: ");
-                int choice = scanner.nextInt();
-                scanner.nextLine();
+            while (true) {
+                try {
+                    System.out.println("\n=== Bus Booking System ===");
+                    System.out.println("1. Register");
+                    System.out.println("2. Login");
+                    System.out.println("3. Book a seat");
+                    System.out.println("4. View Available seats");
+                    System.out.println("5. Cancel Booking");
+                    System.out.println("6. Exit");
+                    System.out.print("Choose an option: ");
 
-                switch (choice){
-                    case 1 :
-                        registerCustomer();
-                        break;
-                    case 2:
-                        loginCustomer();
-                        break;
-                    case 3:
-                        bookSeat();
-                        break;
-                    case 4:
-                        viewAvailableSeats();
-                        break;
-                    case 5:
-                        cancelBooking();
-                        break;
-                    case 6:
-                        System.out.println("Exiting the program. Goodbye!");
-                        return;
-                    default:
-                        System.out.println("Invalid option. Please try again.");
+                    int choice = getValidIntegerInput(1, 6); // Validate menu choice
+                    scanner.nextLine(); // Consume newline
+
+                    switch (choice) {
+                        case 1:
+                            registerCustomer();
+                            break;
+                        case 2:
+                            loginCustomer();
+                            break;
+                        case 3:
+                            bookSeat();
+                            break;
+                        case 4:
+                            viewAvailableSeats();
+                            break;
+                        case 5:
+                            cancelBooking();
+                            break;
+                        case 6:
+                            System.out.println("Exiting the program. Goodbye!");
+                            return;
+                        default:
+                            System.out.println("Invalid option. Please try again.");
+                    }
+                } catch (Exception e) {
+                    System.out.println("An error occurred: " + e.getMessage());
                 }
             }
-
         } catch (SQLException e) {
             System.err.println("Error connecting to the database: " + e.getMessage());
         } finally {
@@ -74,7 +77,6 @@ public class Main {
     }
 
     private static void registerCustomer() {
-        Scanner scanner = new Scanner(System.in);
         System.out.println("\n=== Register ===");
 
         // Get name
@@ -124,8 +126,8 @@ public class Main {
         customer.setPassword(password);
         customer.setBirthDate(birthDate);
 
-        CustomerDAO customerDAO = new CustomerDAO(DatabaseConnection.getConnection());
         try {
+            CustomerDAO customerDAO = new CustomerDAO(DatabaseConnection.getConnection());
             customerDAO.insertCustomer(customer);
             System.out.println("Registration successful! You can now log in.");
         } catch (SQLException e) {
@@ -134,14 +136,12 @@ public class Main {
     }
 
     private static void loginCustomer() {
-        Scanner scanner = new Scanner(System.in);
         System.out.println("\n=== Login ===");
 
         String email;
         while (true) {
             System.out.print("Enter your email: ");
             email = scanner.nextLine();
-
             if (BookingService.isValidEmailAddress(email)) {
                 break; // Exit the loop if the email is valid
             } else {
@@ -152,9 +152,8 @@ public class Main {
         System.out.print("Enter your password: ");
         String password = scanner.nextLine();
 
-        CustomerDAO customerDAO = new CustomerDAO(DatabaseConnection.getConnection());
-
         try {
+            CustomerDAO customerDAO = new CustomerDAO(DatabaseConnection.getConnection());
             currentCustomer = customerDAO.login(email, password);
             if (currentCustomer != null) {
                 System.out.println("Login successful! Welcome, " + currentCustomer.getName() + ".");
@@ -166,7 +165,7 @@ public class Main {
         }
     }
 
-    private static void bookSeat(){
+    private static void bookSeat() throws SQLException {
         if (currentCustomer == null) {
             System.out.println("You must be logged in to book a seat.");
             return;
@@ -178,28 +177,28 @@ public class Main {
         String seatNumber = scanner.nextLine();
 
         if (bookingService.addBooking(currentCustomer.getId(), seatNumber)) {
-            System.out.println("Seat " + seatNumber + " booked successfully");
+            System.out.println("Seat " + seatNumber + " booked successfully.");
         } else {
             System.out.println("Failed to book seat " + seatNumber + ".");
         }
     }
 
     private static void viewAvailableSeats() {
-        System.out.println("\\n=== Available seats===\"");
+        System.out.println("\n=== Available Seats ===");
         bookingService.displayAvailableSeats();
     }
 
     private static void cancelBooking() {
         if (currentCustomer == null) {
-            System.out.println("You must be logged to cancel a booking.");
+            System.out.println("You must be logged in to cancel a booking.");
             return;
         }
 
-        System.out.println("\\n=== Cancel Booking ===\"");
+        System.out.println("\n=== Cancel Booking ===");
         try {
             var bookings = bookingService.getBookingsByCustomerId(currentCustomer.getId());
             if (bookings.isEmpty()) {
-                System.out.println("You have not bookings to cancel.");
+                System.out.println("You have no bookings to cancel.");
                 return;
             }
 
@@ -209,18 +208,33 @@ public class Main {
             }
 
             System.out.print("Enter the booking ID to cancel: ");
-            int bookingID = scanner.nextInt();
-            scanner.nextLine();
+            int bookingID = getValidIntegerInput(1, Integer.MAX_VALUE); // Validate booking ID
+            scanner.nextLine(); // Consume newline
 
             if (bookingService.cancelBooking(bookingID)) {
                 System.out.println("Booking cancelled successfully.");
             } else {
                 System.out.println("Failed to cancel booking.");
             }
-
         } catch (SQLException e) {
-            System.out.println("Error cancelling booking: " + e.getMessage());
+            System.err.println("Error cancelling booking: " + e.getMessage());
         }
     }
 
+    // Helper method to validate integer input within a range
+    private static int getValidIntegerInput(int min, int max) {
+        while (true) {
+            try {
+                int input = scanner.nextInt();
+                if (input >= min && input <= max) {
+                    return input;
+                } else {
+                    System.out.println("Invalid input. Please enter a number between " + min + " and " + max + ".");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a valid number.");
+                scanner.nextLine(); // Clear invalid input
+            }
+        }
+    }
 }
