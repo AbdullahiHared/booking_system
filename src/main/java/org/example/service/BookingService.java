@@ -173,8 +173,8 @@ public class BookingService {
 
             // print the updated busSeats array
             for (String[] row : busSeats) {
-                for (String seat: row) {
-                    System.out.println(seat + " ");
+                for (String seat : row) {
+                    System.out.printf("%-4s", seat);
                 }
                 System.out.println();
             }
