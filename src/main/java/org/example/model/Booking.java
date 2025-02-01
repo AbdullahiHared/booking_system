@@ -1,18 +1,22 @@
 package org.example.model;
 
+import java.time.LocalDate;
+
 public class Booking {
     private int id;
     private Customer customer;
     private String seat;
+    private LocalDate bookingDate;
+    private TicketType ticketType;
 
     // Constructors
-    public Booking(int customerId, String seatNumber) {
-        this.setCustomerId(customerId); // Use setCustomerId to set the customer ID
-        this.seat = seatNumber; // This line causes the error
+    public Booking(int customerId, String seatNumber, TicketType ticketType) {
+        this.setCustomerId(customerId);
+        this.seat = seatNumber;
+        this.ticketType = ticketType;
     }
 
-    public Booking() {
-    }
+    public Booking() {}
 
     // Getters and Setters
     public int getId() {
@@ -32,10 +36,6 @@ public class Booking {
         this.seat = seat;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
-
     public int getCustomerId() {
         return customer != null ? customer.getId() : -1; // Return -1 if customer is null
     }
@@ -45,5 +45,21 @@ public class Booking {
             this.customer = new Customer();
         }
         this.customer.setId(customerId);
+    }
+
+    public LocalDate getBookingDate() {
+        return bookingDate;
+    }
+
+    public void setBookingDate(LocalDate bookingDate) {
+        this.bookingDate = bookingDate;
+    }
+
+    public TicketType getTicketType() {
+        return ticketType;
+    }
+
+    public void setTicketType(TicketType ticketType) {
+        this.ticketType = ticketType;
     }
 }
