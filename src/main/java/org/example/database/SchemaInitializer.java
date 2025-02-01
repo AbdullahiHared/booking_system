@@ -21,12 +21,18 @@ public class SchemaInitializer {
                         "seat_number VARCHAR(10) NOT NULL, " +
                         "ticket_type ENUM('ADULT', 'CHILD') NOT NULL, " +
                         "booking_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
-                        "FOREIGN KEY (customer_id) REFERENCES Customers(customer_id) ON DELETE CASCADE, " +
+                        "FOREIGN KEY (customer_id) REFERENCES Customers(customer_id) ON DELETE CASCADE" +
                         ");",
 
                 "CREATE TABLE IF NOT EXISTS booked_seats (" +
                         "booked_seat_id INT AUTO_INCREMENT PRIMARY KEY, " +
                         "seat_number VARCHAR(255) NOT NULL UNIQUE" +
+                        ");",
+
+                "CREATE TABLE IF NOT EXISTS profits (" +
+                        "id INT AUTO_INCREMENT PRIMARY KEY, " +
+                        "amount DOUBLE NOT NULL, " +
+                        "timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
                         ");"
         };
 
@@ -39,7 +45,7 @@ public class SchemaInitializer {
         } catch (Exception e) {
             System.err.println("Error initializing schema: " + e.getMessage());
             e.printStackTrace();
-            throw new RuntimeException("Failed to initialize database schema", e); // Fail fast
+            throw new RuntimeException("Failed to initialize database schema", e);
         }
     }
 }
