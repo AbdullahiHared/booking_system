@@ -37,38 +37,22 @@ public class Main {
             while (true) {
                 try {
                     System.out.println("\n=== Bus Booking System ===");
-                    System.out.println("1. Register");
-                    System.out.println("2. Login");
-                    System.out.println("3. Book a seat");
-                    System.out.println("4. View Available seats");
-                    System.out.println("5. Cancel Booking");
-                    System.out.println("6. Find Booking");
+                    System.out.println("1. Customer");
+                    System.out.println("2. Inspector");
                     System.out.println("7. Exit");
                     System.out.print("Choose an option: ");
 
-                    int choice = getValidIntegerInput(1, 7); // Validate menu choice
+                    int choice = getValidIntegerInput(1, 3); // Validate menu choice
                     scanner.nextLine(); // Consume newline
 
                     switch (choice) {
                         case 1:
-                            registerCustomer();
+                            customerMenu();
                             break;
                         case 2:
-                            loginCustomer();
+                            inspectorMenu();
                             break;
                         case 3:
-                            bookSeat();
-                            break;
-                        case 4:
-                            viewAvailableSeats();
-                            break;
-                        case 5:
-                            cancelBooking();
-                            break;
-                        case 6:
-                            findBooking();
-                            break;
-                        case 7:
                             System.out.println("Exiting the program. Goodbye!");
                             return;
                         default:
@@ -121,6 +105,36 @@ public class Main {
                         findBooking();
                         break;
                     case 7:
+                        return; // Go back to the main menu
+                    default:
+                        System.out.println("Invalid option. Please try again.");
+                }
+            } catch (Exception e) {
+                System.out.println("An error occurred: " + e.getMessage());
+            }
+        }
+    }
+
+    private static void inspectorMenu() {
+        while (true) {
+            try {
+                System.out.println("\n=== Inspector Menu ===");
+                System.out.println("1. View Total Profit");
+                System.out.println("2. View Available Seats Count");
+                System.out.println("3. Back to Main Menu");
+                System.out.print("Choose an option: ");
+
+                int choice = getValidIntegerInput(1, 3); // Validate menu choice
+                scanner.nextLine(); // Consume newline
+
+                switch (choice) {
+                    case 1:
+                        viewTotalProfit();
+                        break;
+                    case 2:
+                        viewAvailableSeats();
+                        break;
+                    case 3:
                         return; // Go back to the main menu
                     default:
                         System.out.println("Invalid option. Please try again.");
