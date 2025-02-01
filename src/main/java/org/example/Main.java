@@ -1,11 +1,13 @@
 package org.example;
 
 import org.example.dao.BookingDAO;
+import org.example.dao.BusInspectorDAO;
 import org.example.dao.CustomerDAO;
 import org.example.dao.SeatsDAO;
 import org.example.database.DatabaseConnection;
 import org.example.model.Booking;
 import org.example.model.Customer;
+import org.example.model.TicketType;
 import org.example.service.BookingService;
 
 import java.sql.Connection;
@@ -29,7 +31,8 @@ public class Main {
             BookingDAO bookingDAO = new BookingDAO(connection);
             CustomerDAO customerDAO = new CustomerDAO(connection);
             SeatsDAO seatsDAO = new SeatsDAO(connection);
-            bookingService = new BookingService(bookingDAO, customerDAO, seatsDAO);
+            BusInspectorDAO busInspectorDAO = new BusInspectorDAO();
+            bookingService = new BookingService(bookingDAO, customerDAO, seatsDAO, busInspectorDAO);
 
             while (true) {
                 try {
@@ -170,7 +173,6 @@ public class Main {
             System.err.println("Error during login: " + e.getMessage());
         }
     }
-
     private static void bookSeat() throws SQLException {
         if (currentCustomer == null) {
             System.out.println("You must be logged in to book a seat.");
@@ -182,7 +184,17 @@ public class Main {
         System.out.print("Enter the seat number you want to book: ");
         String seatNumber = scanner.nextLine();
 
-        if (bookingService.addBooking(currentCustomer.getId(), seatNumber)) {
+        // Prompt for ticket type
+        System.out.println("Select ticket type:");
+        System.out.println("1. Adult (299 SEK)");
+        System.out.println("2. Child (149 SEK)");
+        System.out.print("Choose an option: ");
+        int ticketChoice = getValidIntegerInput(1, 2);
+        scanner.nextLine(); // Consume newline
+
+        TicketType ticketType = (ticketChoice == 1) ? TicketType.ADULT : TicketType.CHILD;
+
+        if (bookingService.addBooking(currentCustomer.getId(), seatNumber, ticketType)) {
             System.out.println("Seat " + seatNumber + " booked successfully.");
         } else {
             System.out.println("Failed to book seat " + seatNumber + ".");

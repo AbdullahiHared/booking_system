@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.validator.routines.EmailValidator;
+import org.example.model.TicketType;
+import org.example.dao.BusInspectorDAO;
 
 public class BookingService {
 
@@ -18,12 +20,14 @@ public class BookingService {
     private final BookingDAO bookingDAO;
     private final CustomerDAO customerDAO;
     private final SeatsDAO seatsDAO;
+    private final BusInspectorDAO busInspectorDAO;
     private final String[][] busSeats;
 
-    public BookingService(BookingDAO bookingDAO, CustomerDAO customerDAO, SeatsDAO seatsDAO) {
+    public BookingService(BookingDAO bookingDAO, CustomerDAO customerDAO, SeatsDAO seatsDAO, BusInspectorDAO busInspectorDAO) {
         this.bookingDAO = bookingDAO;
         this.customerDAO = customerDAO;
         this.seatsDAO = seatsDAO;
+        this.busInspectorDAO = busInspectorDAO;
         this.busSeats = initializeSeats(); // Initialize the busSeats array
         updateSeatsFromDatabase(); // Update the busSeats array with booked seats from the database
     }
@@ -73,7 +77,7 @@ public class BookingService {
     }
 
     // Add a booking
-    public boolean addBooking(int customerId, String seatNumber) {
+    public boolean addBooking(int customerId, String seatNumber, TicketType ticketType) {
         try {
             if (!isValidSeat(seatNumber)) {
                 logger.warning("Invalid seat number: " + seatNumber);
@@ -90,14 +94,20 @@ public class BookingService {
                 return false;
             }
 
+            // Calculate price based on ticket type
+            double price = (ticketType == TicketType.ADULT) ? 299.0 : 149.0;
+
             // Add booking to the database
-            bookingDAO.addBooking(new Booking(customerId, seatNumber));
+            bookingDAO.addBooking(new Booking(customerId, seatNumber, ticketType));
 
             // Add the seat as booked in the booked_seats database
             seatsDAO.addSeat(seatNumber);
 
             // Mark seat as booked
             markSeatAsBooked(seatNumber);
+
+            // add profit to the database
+            busInspectorDAO.addProfit(price);
 
             logger.info("Booking added successfully for seat " + seatNumber);
             return true;
