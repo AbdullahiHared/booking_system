@@ -22,4 +22,18 @@ public class BusInspectorDAO {
         }
     }
 
+    // get all profits
+    public double getTotalProfits() throws SQLException {
+        String query = "SELECT SUM(amount) AS total_profit FROM profits";
+        try(Connection connection = DatabaseConnection.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+
+            if(rs.next()) {
+                return rs.getDouble("total_profit");
+            }
+        }
+
+        return 0.0; // return 0 if not profit data is found
+    }
 }
