@@ -144,6 +144,10 @@ public class BookingService {
             // Remove seat from the booked_seats database
             seatsDAO.deleteSeat(booking.getSeat());
 
+            // update the current profit
+            double ticketPrice = calculatePrice(booking.getTicketType());
+            busInspectorDAO.addProfit(-ticketPrice);
+
             // Mark the seat as available in the busSeats array
             markSeatAsAvailable(booking.getSeat());
 
