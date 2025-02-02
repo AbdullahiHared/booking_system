@@ -266,6 +266,12 @@ public class Main {
         bookingService.displayAvailableSeats();
     }
 
+    public static void viewTotalProfit() throws SQLException {
+        System.out.println("\n=== Total profit ===");
+        double currentProfit = BookingService.getTotalProfit();
+        System.out.println(currentProfit);
+    }
+
     private static void cancelBooking() {
         if (currentCustomer == null) {
             System.out.println("You must be logged in to cancel a booking.");
