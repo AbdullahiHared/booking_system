@@ -211,4 +211,10 @@ public class BookingService {
     public Booking getBookingByCustomerId(int customerId) throws SQLException {
         return bookingDAO.getBookingByCustomerId(customerId);
     }
+
+    // get total profit
+    public static double getTotalProfit() throws SQLException {
+        BusInspectorDAO busInspectorDAO = new BusInspectorDAO();
+        return busInspectorDAO.getTotalProfits();
+    }
 }
