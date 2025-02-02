@@ -95,7 +95,7 @@ public class BookingService {
             }
 
             // Calculate price based on ticket type
-            double price = (ticketType == TicketType.ADULT) ? 299.0 : 149.0;
+            double ticketPrice = calculatePrice(ticketType);
 
             // Add booking to the database
             bookingDAO.addBooking(new Booking(customerId, seatNumber, ticketType));
@@ -107,7 +107,7 @@ public class BookingService {
             markSeatAsBooked(seatNumber);
 
             // add profit to the database
-            busInspectorDAO.addProfit(price);
+            busInspectorDAO.addProfit(ticketPrice);
 
             logger.info("Booking added successfully for seat " + seatNumber);
             return true;
@@ -153,6 +153,11 @@ public class BookingService {
             logger.log(Level.SEVERE, "Error canceling booking: " + e.getMessage(), e);
             return false;
         }
+    }
+
+    // Helper method to calculate price based on ticket type
+    private double calculatePrice(TicketType ticketType) {
+        return (ticketType == TicketType.ADULT) ? 299.0 : 149.0;
     }
 
     // Mark a seat as available
