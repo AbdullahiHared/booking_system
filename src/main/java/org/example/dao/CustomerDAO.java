@@ -109,8 +109,7 @@ public class CustomerDAO {
         String sql = "DELETE FROM customers WHERE email = ? AND password = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, email);
-            ps.setString(2, hashPassword(password)); // Hash the password before deletion
-
+            ps.setString(2, hashPassword(password));
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected > 0) {
                 System.out.println("Customer with email " + email + " was deleted.");
@@ -149,7 +148,7 @@ public class CustomerDAO {
 
     // Helper method to hash passwords using BCrypt
     private String hashPassword(String password) {
-        return BCrypt.hashpw(password, BCrypt.gensalt()); // Hashes the password with a salt
+        return BCrypt.hashpw(password, BCrypt.gensalt());
     }
 
     // Helper method to verify passwords using BCrypt

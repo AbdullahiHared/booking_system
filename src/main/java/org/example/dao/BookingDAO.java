@@ -16,7 +16,6 @@ public class BookingDAO {
 
     // Add a new booking
     public void addBooking(Booking booking) throws SQLException {
-        System.out.println("Trying to add booking for customer with ID: " + booking.getCustomerId());
         String sql = "INSERT INTO Bookings (customer_id, passenger_seat, ticket_type) VALUES (?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, booking.getCustomerId());

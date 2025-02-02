@@ -32,6 +32,8 @@ public class BusInspectorDAO {
             if(rs.next()) {
                 return rs.getDouble("total_profit");
             }
+        } catch (SQLException e) {
+            System.err.println("Error fetching profits: " + e.getMessage());
         }
 
         return 0.0; // return 0 if not profit data is found
