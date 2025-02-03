@@ -49,7 +49,7 @@ public class BookingService {
                 markSeatAsBooked(seat);
             }
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "Error updating seats from database: " + e.getMessage(), e);
+            System.out.println("Error updating seat. Try again.");
         }
     }
 
@@ -80,17 +80,17 @@ public class BookingService {
     public boolean addBooking(int customerId, String seatNumber, TicketType ticketType) {
         try {
             if (!isValidSeat(seatNumber)) {
-                logger.warning("Invalid seat number: " + seatNumber);
+                System.out.println("Invalid seat number: " + seatNumber);
                 return false;
             }
 
             if (!isSeatAvailable(seatNumber)) {
-                logger.warning("Seat " + seatNumber + " is already booked!");
+                System.out.println("Seat " + seatNumber + " is already booked!");
                 return false;
             }
 
             if (!customerExists(customerId)) {
-                logger.warning("Customer with ID " + customerId + " does not exist.");
+                System.out.println("Customer with ID " + customerId + " does not exist.");
                 return false;
             }
 
@@ -112,7 +112,7 @@ public class BookingService {
             logger.info("Booking added successfully for seat " + seatNumber);
             return true;
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Error adding booking: " + e.getMessage(), e);
+            System.out.println( "Error adding booking: " + e.getMessage());
             return false;
         }
     }
@@ -134,7 +134,7 @@ public class BookingService {
         try {
             Booking booking = bookingDAO.getBookingById(bookingId);
             if (booking == null) {
-                logger.warning("Booking with ID " + bookingId + " not found.");
+                System.out.println("Booking with ID " + bookingId + " not found.");
                 return false;
             }
 
@@ -151,10 +151,10 @@ public class BookingService {
             // Mark the seat as available in the busSeats array
             markSeatAsAvailable(booking.getSeat());
 
-            logger.info("Booking with ID " + bookingId + " canceled successfully.");
+            System.out.println("Booking with ID " + bookingId + " canceled successfully.");
             return true;
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Error canceling booking: " + e.getMessage(), e);
+            System.out.println("Failed to cancel booking.");
             return false;
         }
     }
@@ -201,7 +201,7 @@ public class BookingService {
                 System.out.println();
             }
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "Error displaying available seats: " + e.getMessage(), e);
+            System.out.println("Error displaying available seats.");
         }
     }
 
