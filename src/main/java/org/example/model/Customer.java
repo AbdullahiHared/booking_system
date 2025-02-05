@@ -3,7 +3,7 @@ package org.example.model;
 import java.sql.Date;
 import java.time.LocalDate;
 
-public class Customer {
+public class Customer extends Person {
     private int customerId;
     private Date birthDate;
     private String name;
@@ -11,6 +11,7 @@ public class Customer {
     private String password;
 
     public Customer(String name, LocalDate birthDate, String mail, String password) {
+        super(name, mail);
         this.name = name;
         this.birthDate = Date.valueOf(birthDate);
         this.mail = mail;
@@ -18,10 +19,10 @@ public class Customer {
     }
 
     public Customer() {
-
+        super(null, null);
     }
 
-    // Getter and Setter for customerId
+    // Getters and Setters
     public int getId() {
         return customerId;
     }
@@ -29,8 +30,6 @@ public class Customer {
     public void setId(int customerId) {
         this.customerId = customerId;
     }
-
-    // Getter and Setter for firstName
 
     public String getName () {
         return this.name;
@@ -40,7 +39,6 @@ public class Customer {
         this.name = newName;
     }
 
-    // Getter and Setter for birthDate
     public String getBirthDate() {
         return birthDate.toString();
     }
